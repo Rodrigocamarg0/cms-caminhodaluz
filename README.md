@@ -26,31 +26,32 @@ Se estiver usando RBAC, seu middleware também pode verificar se o usuário tem 
 
 Crie controllers para gerenciar a lógica de registro, login, logout e outros relacionados à autenticação/autorização.
 Defina rotas específicas para essas ações, por exemplo, POST /register, POST /login, etc.
-
+```
 ├── app.js
 │
 ├── package.json
 │
 ├── models
-│ ├── user.js
-│ └── role.js
+│   ├── user.js
+│   └── role.js
 │
 ├── controllers
-│ ├── authController.js
-│ └── userController.js
+│   ├── authController.js
+│   └── userController.js
 │
 ├── routes
-│ ├── authRoutes.js
-│ └── userRoutes.js
+│   ├── authRoutes.js
+│   └── userRoutes.js
 │
 ├── middlewares
-│ ├── auth.js
-│ └── logger.js
+│   ├── auth.js
+│   └── logger.js
 │
 ├── services
-│ ├── userService.js
-│ └── roleService.js
+│   ├── userService.js
+│   └── roleService.js
 │
 └── utils
- ├── jwtHelper.js
- └── hashHelper.js
+    ├── jwtHelper.js
+    └── hashHelper.js
+
