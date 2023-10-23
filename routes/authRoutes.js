@@ -1,30 +1,31 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
+const authConfig = require('../config/config');
+
 const router = express.Router();
-const authController = require('../controllers/authController');
-const authMiddleware = require('../middlewares/auth');
 
-router.post('/login', authController.login);
+router.post('/authenticate', async (req, res) => {
+    const { email, senha } = req.body;
 
-router.get('/someProtectedRoute', authMiddleware, (req, res) => {
-    // Suponha que req.user contém informações do usuário após a autenticação
-    const user = req.user;
+    const user = await User.findOne({ where: { email } });
 
-    // Verificando se o usuário está definido após a autenticação
-    if (user) {
-        // Retornando informações sensíveis ou privadas
-        res.json({
-            message: 'Esta é uma rota protegida!',
-            userDetails: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role
-            }
-        });
-    } else {
-        res.status(401).json({ message: 'Erro de autenticação.' });
+    if (!user) {
+        return res.status(400).send({ error: 'User not found' });
     }
-});
 
+    if (!await bcrypt.compare(senha, user.senha)) {
+        return res.status(400).send({ error: 'Invalid password' });
+    }
+
+    const token = jwt.sign({ id: user.id }, authConfig.secret, {
+        expiresIn: authConfig.expiresIn,
+    });
+
+    req.session.user = user;
+
+    return res.send({ user, token });
+});
 
 module.exports = router;

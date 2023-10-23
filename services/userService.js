@@ -1,8 +1,34 @@
 const { User, Role, Permission } = require('../models');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'YOUR_SECRET_KEY'; // Mantenha isso seguro e use uma chave complexa
+
 
 class UserService {
 
+    async hashPassword(password) {
+        const salt = await bcrypt.genSalt(10);
+        return bcrypt.hash(password, salt);
+    }
 
+    async authenticateUser(email, senha) {
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        if (!await bcrypt.compare(senha, user.senha)) {
+            throw new Error('Invalid password');
+        }
+
+        const token =  jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
+            expiresIn: 3600 // expires in 5min
+       });
+       console.log(token)
+
+        return { user: user, token:  token};
+    }
+    
     async listAllUsers() {
         try {
             const users = await User.findAll();
@@ -14,7 +40,9 @@ class UserService {
 
     async createUser(data) {
         try {
-            // Aplicar regras de negócio, como validação, etc.
+            // Hash the password
+            data.senha = await this.hashPassword(data.senha);
+            
             const user = await User.create(data);
             return user;
         } catch (error) {
