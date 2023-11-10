@@ -1,13 +1,14 @@
 const express = require('express');
+const app = express();
 
 const bodyParser = require('body-parser');
 const routes = require('./routes');
 
 const Sequelize = require('sequelize');
+const cors = require('cors');
 
 const config = require('./config/config.js').development;
 
-const app = express();
 
 const session = require('express-session');
 
@@ -27,16 +28,18 @@ sequelize.authenticate()
 
   
 app.use(session({
-    secret: 'your_secret_key', // Escolha uma chave secreta para assinar o cookie da sessão
+    secret: 'your_secret_key', 
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Defina como true se estiver em produção e estiver usando HTTPS
+    cookie: { secure: false } 
 }));
 
-// Middlewares
-app.use(bodyParser.json()); // Para analisar o corpo das requisições como JSON
+// Use this to allow all origins
+app.use(cors());
 
-// Middleware para tratamento de erros (deve ser o último a ser definido)
+app.use(bodyParser.json()); 
+
+
 app.use((err, req, res, next) => {
     if (err) {
         console.error(err.stack);
@@ -44,11 +47,11 @@ app.use((err, req, res, next) => {
     }
 });
 
-// Use rotas definidas em routes.js
+
 app.use('/', routes);
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 80;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
