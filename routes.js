@@ -7,6 +7,7 @@ const roleRoutes = require('./routes/roleRoutes');
 const associadoRoutes = require('./routes/associadoRoutes');
 const grupoEstudoRoutes = require('./routes/grupoEstudoRoutes');
 const escolaridadeRoutes = require('./routes/escolaridadeRoutes');
+const profissaoRoutes = require('./routes/profissaoRoutes');
 
 
 const router = express.Router();
@@ -18,5 +19,6 @@ router.use('/roles', roleRoutes);
 router.use('/associado', associadoRoutes);
 router.use('/grupoEstudo', grupoEstudoRoutes);
 router.use('/escolaridade', escolaridadeRoutes);
+router.use('/profissao', profissaoRoutes);
 
 module.exports = router;

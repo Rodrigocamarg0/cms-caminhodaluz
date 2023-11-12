@@ -1,0 +1,9 @@
+const express = require('express');
+const profissaoController = require('../controllers/profissaoController');  // Adjust the path based on your structure
+
+const router = express.Router();
+
+// List all 'profissao'
+router.get('/', profissaoController.listProfissao);
+
+module.exports = router;
