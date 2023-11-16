@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
         profissao_id: {
             type: DataTypes.INTEGER,
             allowNull: true,
+            references: {
+                model: 'Profissao',
+                key: 'profissao_id'
+            }
         },
         escolaridade_id: {
             type: DataTypes.INTEGER,
@@ -89,6 +93,10 @@ module.exports = (sequelize, DataTypes) => {
         trabalha_na_casa: {
             type: DataTypes.INTEGER,
             allowNull: true,
+        },
+        profile_image: {
+            type: DataTypes.BLOB,
+            allowNull: true
         }
     }, {
         tableName: 'pessoa',
@@ -96,6 +104,12 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Pessoa.associate = (models) => {
+
+
+        Pessoa.belongsTo(models.Profissao, {
+            foreignKey: 'profissao_id',
+            as: 'profissao'
+        });
         // // Pessoa has many Pagamentos
         // Pessoa.hasMany(models.Pagamento, {
         //     foreignKey: 'pessoa_id',
