@@ -9,13 +9,13 @@ const app = express();
 
 // Database configuration from environment variables
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  process.env.DB_DATABASE, // DB name
+  process.env.DB_USERNAME, // DB username
+  process.env.DB_PASSWORD, // DB password
   {
-    host: process.env.DB_HOST,
+    host: process.env.DB_HOST, // DB host
     dialect: 'postgres',
-    port: process.env.DB_PORT || 5432
+    port: process.env.DB_PORT // DB port
   }
 );
 
@@ -30,7 +30,7 @@ sequelize.authenticate()
 
 // Session configuration
 app.use(session({
-    secret: process.env.SESSION_SECRET, // Use an environment variable for the secret
+    secret: process.env.SESSION_SECRET, // Session secret
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using https
