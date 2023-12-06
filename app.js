@@ -35,11 +35,12 @@ sequelize.authenticate()
 
 // Session configuration
 app.use(session({
-    secret: process.env.SESSION_SECRET, // Session secret
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // Set to true if using https
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using https
 }));
+
 
 // Enable CORS
 app.use(cors());
