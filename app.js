@@ -1,60 +1,60 @@
 const express = require('express');
-const app = express();
-
 const bodyParser = require('body-parser');
+const Sequelize = require('sequelize');
+const session = require('express-session');
+const cors = require('cors');
 const routes = require('./routes');
 
-const Sequelize = require('sequelize');
-const cors = require('cors');
+const app = express();
 
-const config = require('./config/config.js').development;
+// Database configuration from environment variables
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: 'postgres',
+    port: process.env.DB_PORT || 5432
+  }
+);
 
-
-const session = require('express-session');
-
-const sequelize = new Sequelize(config.database, config.username, config.password, {
-  host: config.host,
-  dialect: config.dialect
-});
-
-// Testar a conexão
+// Test database connection
 sequelize.authenticate()
   .then(() => {
-    console.log('Conexão com o banco de dados estabelecida com sucesso.');
+    console.log('Database connection established successfully.');
   })
   .catch(err => {
-    console.error('Não foi possível conectar-se ao banco de dados:', err);
+    console.error('Unable to connect to the database:', err);
   });
 
-  
+// Session configuration
 app.use(session({
-    secret: 'your_secret_key', 
+    secret: process.env.SESSION_SECRET, // Use an environment variable for the secret
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } 
+    cookie: { secure: false } // Set to true if using https
 }));
 
-// Use this to allow all origins
+// Enable CORS
 app.use(cors());
 
-app.use(bodyParser.json()); 
+// Parse JSON bodies
+app.use(bodyParser.json());
 
-
-app.use((err, req, res, next) => {
-    if (err) {
-        console.error(err.stack);
-        res.status(500).send('Something broke!');
-    }
-});
-
-
+// Routes
 app.use('/', routes);
 
-
-const PORT = process.env.PORT || 80;
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// Error handling middleware should be after route definitions
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
-module.exports = app; 
+// Server configuration
+const PORT = process.env.PORT || 80;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+module.exports = app;
