@@ -7,15 +7,20 @@ const routes = require('./routes');
 
 const app = express();
 
-// Database configuration from environment variables
 const sequelize = new Sequelize(
-  process.env.DB_DATABASE, // DB name
-  process.env.DB_USERNAME, // DB username
-  process.env.DB_PASSWORD, // DB password
+  process.env.DB_DATABASE, 
+  process.env.DB_USERNAME, 
+  process.env.DB_PASSWORD, 
   {
-    host: process.env.DB_HOST, // DB host
+    host: process.env.DB_HOST,
     dialect: 'postgres',
-    port: process.env.DB_PORT // DB port
+    port: process.env.DB_PORT,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false // Note: Setting this to false can create a security vulnerability in a production app
+      }
+    }
   }
 );
 

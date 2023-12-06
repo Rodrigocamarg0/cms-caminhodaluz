@@ -14,14 +14,14 @@ module.exports = {
     "password": null,
     "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "postgres"
   },
   "production": {
     "username": "root",
     "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "postgres"
   },
   "secret": "your-secret-key",  // Você deve gerar uma chave secreta forte.
   "expiresIn": "1h"             // O tempo em que o token expira. Pode ser ajustado conforme necessário.
